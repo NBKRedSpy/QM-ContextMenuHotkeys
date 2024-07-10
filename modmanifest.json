@@ -1,0 +1,7 @@
+{
+    "UniqueModName": "QM_ContextMenuHotkeys",
+    "Assemblies": [
+        "QM-ContextMenuHotkeys.dll"
+    ],
+    "Dependencies": []
+}
