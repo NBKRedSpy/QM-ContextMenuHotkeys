@@ -30,6 +30,24 @@ Note: if the config file does not have all of the settings below, delete the fil
 |ModifierCommands|Disassemble*, UnlockDataDisk|The list of commands to require a modifier key to be held.  Ex: Alt + 1.  See the Command List section below |
 |ModifierKeys|Shift, Alt|The modifier keys for the ModifierCommands|
 
+### Removing All Items In a List
+To remove a list of all items, replace the value with '[]'.
+
+For example:
+```
+  "ModifierCommands": [
+    "Disassemble",
+    "DisassembleX1",
+    ...
+  ],
+```
+To:
+
+```
+  "ModifierCommands": [],
+```  
+
+
 ## Key List
 The list of valid keyboard keys can be found  at the bottom of https://docs.unity3d.com/ScriptReference/KeyCode.html
 

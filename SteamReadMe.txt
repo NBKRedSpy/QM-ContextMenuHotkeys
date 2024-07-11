@@ -60,6 +60,24 @@ Note: if the config file does not have all of the settings below, delete the fil
 [/tr]
 [/table]
 
+[h3]Removing All Items In a List[/h3]
+
+To remove a list of all items, replace the value with '[]'.
+
+For example:
+[code]
+  "ModifierCommands": [
+    "Disassemble",
+    "DisassembleX1",
+    ...
+  ],
+[/code]
+
+To:
+[code]
+  "ModifierCommands": [],
+[/code]
+
 [h2]Key List[/h2]
 
 The list of valid keyboard keys can be found  at the bottom of https://docs.unity3d.com/ScriptReference/KeyCode.html
