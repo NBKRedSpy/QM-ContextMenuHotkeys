@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using MGSC;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
@@ -38,6 +39,30 @@ namespace QM_ContextMenuHotkeys
         [JsonConverter(typeof(StringEnumConverter))]
         public KeyCode Command10 { get; set; } = KeyCode.Alpha0;
 
+
+        [JsonConverter(typeof(JsonArrayEnumConverter<HashSet<ContextMenuCommand>, ContextMenuCommand>))]
+        public HashSet<ContextMenuCommand> ModifierCommands { get; set; } = new HashSet<ContextMenuCommand>()
+        {
+            ContextMenuCommand.Disassemble,
+            ContextMenuCommand.DisassembleX1,
+            ContextMenuCommand.DisassembleAll,
+            ContextMenuCommand.UnlockDatadisk,
+        };
+
+        /// <summary>
+        /// The modifier keys required for ModiferCommands
+        /// </summary>
+        [JsonConverter(typeof(JsonArrayEnumConverter<List<KeyCode>, KeyCode>))]
+        public List<KeyCode> ModifierKeys { get; set; } = new List<KeyCode>()
+        {
+            KeyCode.LeftShift,
+            KeyCode.RightShift,
+            KeyCode.LeftAlt,
+            KeyCode.RightAlt
+        };
+
+
+
         public void InitKeyStrings()
         {
 
@@ -54,8 +79,6 @@ namespace QM_ContextMenuHotkeys
                 FormatKeyCode(Command9),
                 FormatKeyCode(Command10),
             };
-            
-
         }
 
         public string FormatKeyCode(KeyCode code)

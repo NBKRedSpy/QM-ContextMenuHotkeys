@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using UnityEngine;
 using static System.Runtime.CompilerServices.RuntimeHelpers;
@@ -40,15 +41,24 @@ namespace QM_ContextMenuHotkeys
             if (contextMenu.IsActiveView)
             {
 
+                HashSet<ContextMenuCommand> modifierCommands = Plugin.Config.ModifierCommands;
+
                 CommonButton[] commandButtons = contextMenu.commandButtons;
                 //Hack to not use Harmony.  The menu buttons are recreated when the context menu is shown again.
-                //Number the items.
-                if (commandButtons.Length > 0 && !commandButtons[0].captionText.text.StartsWith($"{ModConfig.KeyStrings[0]}. "))
+                //Prefix the command text.
+
+                //The command binds array will match the buttons array
+                List<ContextMenuCommand> commandBinds = contextMenu._commandBinds.Values.ToList();
+                if (commandBinds.Count > 0 && !commandButtons[0].captionText.text.StartsWith($"{ModConfig.KeyStrings[0]}"))
                 {
-                    for (int i = 0; i < commandButtons.Length; i++)
+                    for (int i = 0; i < commandBinds.Count && commandBinds.Count < 10; i++)
                     {
+                        //Shift only command
+                        string shiftText = modifierCommands.Contains(commandBinds[i]) ?
+                            "+" : "";
+
                         commandButtons[i].captionText.text =
-                            $"{ModConfig.KeyStrings[i]}. {commandButtons[i].captionText.text}";
+                            $"{ModConfig.KeyStrings[i]}{shiftText}. {commandButtons[i].captionText.text}";
                     }
                 }
 
@@ -65,17 +75,27 @@ namespace QM_ContextMenuHotkeys
                     Input.GetKeyUp(Plugin.Config.Command10) ? 9 : -1
                     ;
 
-                if (buttonIndex != -1)
+
+                //Broken out to help with key debugging.
+                if (buttonIndex == -1) { return; }
+
+                //Shift commands
+                if (buttonIndex >= commandBinds.Count) return;
+
+                if (modifierCommands.Contains(commandBinds[buttonIndex]))
                 {
-                    if (buttonIndex > commandButtons.Length) return;
-
-                    CommonButton commandButton = commandButtons[buttonIndex];
-
-                    contextMenu.OnContextCommandClick(commandButton);
+                    //This command requires a shift.
+                    if(!Plugin.Config.ModifierKeys.Any(x=> Input.GetKey(x)))
+                    {
+                        return;
+                    }
                 }
 
-            }
+                CommonButton commandButton = commandButtons[buttonIndex];
 
+                contextMenu.OnContextCommandClick(commandButton);
+
+            }
         }
     }
 }
