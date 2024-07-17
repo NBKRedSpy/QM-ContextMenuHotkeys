@@ -9,7 +9,6 @@ using MGSC;
 
 namespace QM_ContextMenuHotkeys
 {
-    [HarmonyPatch(typeof(ContextMenu), nameof(ContextMenu.InitCommands))]
     public static class ContextMenu_InitCommands_Patch
     {
         public static void Postfix(ContextMenu __instance)

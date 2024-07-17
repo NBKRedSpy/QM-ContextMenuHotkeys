@@ -48,20 +48,26 @@ namespace QM_ContextMenuHotkeys
 
         public List<CommandBindKey> CommandBinds { get; set; }
 
+        /// <summary>
+        /// If true, will disable the patch that blocks the game's input handler.
+        /// </summary>
+        public bool DisableKeyLock { get; set; } = false;
 
         public ModConfig()
         {
             //Defaults
             CommandBinds = new List<CommandBindKey>()
             {
-                new CommandBindKey(KeyCode.D, ContextMenuCommand.Disassemble),
-                new CommandBindKey(KeyCode.D, ContextMenuCommand.DisassembleAll),
+                new CommandBindKey(KeyCode.X, ContextMenuCommand.Disassemble),
+                new CommandBindKey(KeyCode.X, ContextMenuCommand.DisassembleAll),
                 new CommandBindKey(KeyCode.O, ContextMenuCommand.DisassembleX1),
-                new CommandBindKey(KeyCode.U, ContextMenuCommand.UnloadAmmo),
+                new CommandBindKey(KeyCode.D, ContextMenuCommand.Drop),
                 new CommandBindKey(KeyCode.E, ContextMenuCommand.Equip),
-                new CommandBindKey(KeyCode.Q, ContextMenuCommand.Unequip),
+                new CommandBindKey(KeyCode.E, ContextMenuCommand.Eat),
                 new CommandBindKey(KeyCode.R, ContextMenuCommand.Reload),
                 new CommandBindKey(KeyCode.T, ContextMenuCommand.Take),
+                new CommandBindKey(KeyCode.Q, ContextMenuCommand.Unequip),
+                new CommandBindKey(KeyCode.W, ContextMenuCommand.UnloadAmmo),
             };
         }
 

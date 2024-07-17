@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
+
 namespace QM_ContextMenuHotkeys
 {
     public static class Plugin
@@ -22,7 +23,24 @@ namespace QM_ContextMenuHotkeys
             LoadConfig();
             Config.InitKeyStrings();
 
-            new Harmony("nbk_redspy.QM_ContextMenuHotkeys").PatchAll();
+
+            Harmony harmony = new Harmony("nbk_redspy.QM_ContextMenuHotkeys");
+
+            if(!Config.DisableKeyLock)
+            {
+                InputHelperPatches.Patch(harmony);
+            }
+            
+
+
+            harmony.Patch(AccessTools.Method(typeof(MGSC.ContextMenu), nameof(MGSC.ContextMenu.InitCommands)),
+                null, new HarmonyMethod(typeof(ContextMenu_InitCommands_Patch), nameof(ContextMenu_InitCommands_Patch.Postfix))
+                );
+
+            harmony.Patch(
+                AccessTools.Method(typeof(MGSC.NoPlayerContextMenu), nameof(MGSC.NoPlayerContextMenu.InitCommands)),
+                null, new HarmonyMethod(typeof(ContextMenu_InitCommands_Patch), nameof(ContextMenu_InitCommands_Patch.Postfix))
+                );
         }
 
         private static void LoadConfig()
