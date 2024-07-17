@@ -1,4 +1,5 @@
-﻿using MGSC;
+﻿using HarmonyLib;
+using MGSC;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -21,13 +22,15 @@ namespace QM_ContextMenuHotkeys
             LoadConfig();
             Config.InitKeyStrings();
 
-
+            new Harmony("nbk_redspy.QM_ContextMenuHotkeys").PatchAll();
         }
+
         private static void LoadConfig()
         {
             JsonSerializerSettings settings = new JsonSerializerSettings()
             {
                 Formatting = Formatting.Indented,
+                ObjectCreationHandling = ObjectCreationHandling.Replace
             };
 
 

@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,6 +18,11 @@ namespace QM_ContextMenuHotkeys
         /// Necessary since 0-9 are prefixed with Alpha
         /// </summary>
         public static List<string> KeyStrings { get; private set; }
+
+        /// <summary>
+        /// The shortcut keys by context menu command.
+        /// </summary>
+        public static Dictionary<ContextMenuCommand, string> KeyBindStrings { get; private set; }
 
         [JsonConverter(typeof(StringEnumConverter))]
         public KeyCode Command1 { get; set; } = KeyCode.Alpha1;
@@ -40,6 +46,25 @@ namespace QM_ContextMenuHotkeys
         public KeyCode Command10 { get; set; } = KeyCode.Alpha0;
 
 
+        public List<CommandBindKey> CommandBinds { get; set; }
+
+
+        public ModConfig()
+        {
+            //Defaults
+            CommandBinds = new List<CommandBindKey>()
+            {
+                new CommandBindKey(KeyCode.D, ContextMenuCommand.Disassemble),
+                new CommandBindKey(KeyCode.D, ContextMenuCommand.DisassembleAll),
+                new CommandBindKey(KeyCode.O, ContextMenuCommand.DisassembleX1),
+                new CommandBindKey(KeyCode.U, ContextMenuCommand.UnloadAmmo),
+                new CommandBindKey(KeyCode.E, ContextMenuCommand.Equip),
+                new CommandBindKey(KeyCode.Q, ContextMenuCommand.Unequip),
+                new CommandBindKey(KeyCode.R, ContextMenuCommand.Reload),
+                new CommandBindKey(KeyCode.T, ContextMenuCommand.Take),
+            };
+        }
+
         [JsonConverter(typeof(JsonArrayEnumConverter<HashSet<ContextMenuCommand>, ContextMenuCommand>))]
         public HashSet<ContextMenuCommand> ModifierCommands { get; set; } = new HashSet<ContextMenuCommand>()
         {
@@ -61,10 +86,9 @@ namespace QM_ContextMenuHotkeys
             KeyCode.RightAlt
         };
 
-
-
         public void InitKeyStrings()
         {
+            KeyBindStrings = CommandBinds.ToDictionary(x => x.Command, x => FormatKeyCode(x.Key));
 
             KeyStrings = new List<string>()
             {
@@ -105,6 +129,29 @@ namespace QM_ContextMenuHotkeys
                     return "8";
                 case KeyCode.Alpha9:
                     return "9";
+                case KeyCode.Keypad0:
+                    return "Num0";
+
+                case KeyCode.Keypad1:
+                    return "Num1";
+                case KeyCode.Keypad2:
+                    return "Num2";
+                case KeyCode.Keypad3:
+                    return "Num3";
+                case KeyCode.Keypad4:
+                    return "Num4";
+                case KeyCode.Keypad5:
+                    return "Num5";
+                case KeyCode.Keypad6:
+                    return "Num6";
+                case KeyCode.Keypad7:
+                    return "Num7";
+                case KeyCode.Keypad8:
+                    return "Num8";
+                case KeyCode.Keypad9:
+                    return "Num9";
+                case KeyCode.None:
+                    return "";
                 default:
                     return code.ToString();
             }
