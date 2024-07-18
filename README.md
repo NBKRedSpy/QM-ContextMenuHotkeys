@@ -89,6 +89,9 @@ RemoveFire
 
 These command identifiers are used for both the Command binds as well as the commands that require a <number> + Modifier Key.
 
+# Support
+If you enjoy my mods and want to leave a tip, check out my [Ko-Fi](https://ko-fi.com/nbkredspy71915) page.
+Thanks!
 
 # Source Code
 Source code is available on GitHub https://github.com/NBKRedSpy/QM-ContextMenuHotkeys
