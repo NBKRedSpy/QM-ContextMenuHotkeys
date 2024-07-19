@@ -23,23 +23,31 @@ namespace QM_ContextMenuHotkeys
             {
                 CommonButton command = __instance._activeButtonsList[i];
 
-                string positionalString = "";
-                positionalString = ModConfig.KeyStrings[i];
-
-                if(positionalString != "")
+                string hotkeyText = "";
+                if(Plugin.Config.EnableNumberedMode)
                 {
-                    positionalString += modifierCommands.Contains(commandBinds[i]) ?
-                        "+ " : " ";
+                    hotkeyText = ModConfig.KeyStrings[i];
+
+                    if (hotkeyText != "")
+                    {
+                        hotkeyText += modifierCommands.Contains(commandBinds[i]) ?
+                            "+ " : " ";
+                    }
                 }
 
-                string keyString;
-                
-                if(ModConfig.KeyBindStrings.TryGetValue(commandBinds[i], out keyString))
+
+                if (Plugin.Config.EnableCommandMode)
                 {
-                    positionalString = keyString + " " + positionalString;
+                    string keyString;
+
+                    //Key bindings if available.
+                    if (ModConfig.KeyBindStrings.TryGetValue(commandBinds[i], out keyString))
+                    {
+                        hotkeyText = keyString + " " + hotkeyText;
+                    }
                 }
 
-                command.captionText.text = $"{positionalString}{command.captionText.text}";
+                command.captionText.text = $"<color=\"yellow\">{hotkeyText}</color>{command.captionText.text}";
             }
         }
     }

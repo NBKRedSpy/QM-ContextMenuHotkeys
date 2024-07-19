@@ -1,9 +1,11 @@
 ﻿using MGSC;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,8 +13,12 @@ using UnityEngine;
 
 namespace QM_ContextMenuHotkeys
 {
+
     public class ModConfig
     {
+
+        public const string LatestConfigVersion = "2.0";
+
         /// <summary>
         /// The string version of the hotkeys.
         /// Necessary since 0-9 are prefixed with Alpha
@@ -23,6 +29,18 @@ namespace QM_ContextMenuHotkeys
         /// The shortcut keys by context menu command.
         /// </summary>
         public static Dictionary<ContextMenuCommand, string> KeyBindStrings { get; private set; }
+
+
+        /// <summary>
+        /// The configuration version.  Used to assist with conversion
+        /// </summary>
+        public string ConfigVersion;
+
+        public bool EnableNumberedMode { get; set; } = false;
+        public bool EnableCommandMode { get; set; } = true;
+
+        public List<CommandBindKey> CommandBinds { get; set; }
+
 
         [JsonConverter(typeof(StringEnumConverter))]
         public KeyCode Command1 { get; set; } = KeyCode.Alpha1;
@@ -45,9 +63,6 @@ namespace QM_ContextMenuHotkeys
         [JsonConverter(typeof(StringEnumConverter))]
         public KeyCode Command10 { get; set; } = KeyCode.Alpha0;
 
-
-        public List<CommandBindKey> CommandBinds { get; set; }
-
         /// <summary>
         /// If true, will disable the patch that blocks the game's input handler.
         /// </summary>
@@ -68,7 +83,31 @@ namespace QM_ContextMenuHotkeys
                 new CommandBindKey(KeyCode.T, ContextMenuCommand.Take),
                 new CommandBindKey(KeyCode.Q, ContextMenuCommand.Unequip),
                 new CommandBindKey(KeyCode.W, ContextMenuCommand.UnloadAmmo),
+                new CommandBindKey(KeyCode.V, ContextMenuCommand.SplitStacks),
             };
+
+            //Add any binds that are not set.  This is to assist users setting up the commands without having to 
+            //  search through them.
+            AddMissingCommands();
+        }
+
+        /// <summary>
+        /// Adds any binding commands that do not already have an entry in the binding list.
+        /// </summary>
+        /// <param name="existing"></param>
+        /// <returns></returns>
+        public void AddMissingCommands()
+        {
+
+            HashSet<ContextMenuCommand> existingCommands = new HashSet<ContextMenuCommand>(CommandBinds.Select(x => x.Command));
+
+            List<CommandBindKey> newCommands =
+                Enum.GetValues(typeof(ContextMenuCommand)).Cast<ContextMenuCommand>()
+                .Where(x => !existingCommands.Contains(x))
+                .Select(x => new CommandBindKey(KeyCode.None, x))
+                .ToList();
+
+            CommandBinds.AddRange(newCommands);
         }
 
         [JsonConverter(typeof(JsonArrayEnumConverter<HashSet<ContextMenuCommand>, ContextMenuCommand>))]

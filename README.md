@@ -1,65 +1,60 @@
 
 # Quasimorph Context Menu Hotkeys
 
-![All Menu Versions](media/All%20Modes.png)
+![All modes screenshot](media/thumbnail.png)
 
 # Info
-Adds hotkeys to the context menus.  Both positional (0-9) as well as well as by command (E = equip).
-The keys for both positional and by command can be changed in the config.
-Either can be disabled.  See the configuration section for more info.
+Adds hotkeys to the context menus. 
 
-Given the top item in image, which has both modes enabled:
-* Pressing 1 will equip.
-* Pressing E will also equip.
-* Pressing 3 + Shift or Alt will Disassemble the item.
-  * The shift is for protection against accidental destructive commands and can be disabled.
+Supports both command binding (Q = Unequip) and positional binding (second item is 2).
 
-# Configuration Upgrade Note
+By default the command binding is enabled.
 
-This section will only affect users of the previous version of the mod and want to modify the settings in the new version.
+The key binds and the modes can be changed in the configuration file.
 
-The new version of the mod will not upgrade the previous version of the configuration.  
+# Update For Existing Users
 
-To get all the new options, delete or rename the config file.  The next time the game is run, a fresh config file will be created.
+The latest update defaults to "command bind" mode instead of "both".
+The configuration has been simplified and now includes all context menu commands in the configuration file.
+The mod will automatically upgrade the existing configuration file to the latest version.
 
-## Modifier Keys
-Any command with a '+' requires holding down an alt or shift key to activate.
+Use the new EnableNumberedMode and EnableCommandMode value to toggle each mode.  It is no longer required to modify the key binds to disable a mode.
+
+# Positional Mode Modifier Keys
+Any command with a '+' requires holding down the number key and the alt or shift key to activate.
 This is to safeguard against accidentally invoking disassembly commands.
 
 The modifier keys (shift, alt, etc.) and the list of commands that require a modifier key can be configured.
+
 
 # Configuration
 
 The configuration file is located at ```%UserProfile%\AppData\LocalLow\Magnum Scriptum Ltd\Quasimorph\QM_ContextMenuHotkeys.json```.
 The file will be created the first time the game is run.
 
-# Disabling Modes
-
-To disable the positional options (0-9), set all CommandN values to ```"None"``` .
-to disable all Command Binds (E = Equip), set the CommandBinds to ```[]``` .
-
-Deleting the entries instead of making the modifications above will cause the mod to still use the defaults.
-
 ## Settings
 Note: if the config file does not have all of the settings below, delete the file.  When the game is next run, a new config file with all options will be created.
 
-
 |Name|Default|Description|
 |--|--|--|
-|CommandN|0-9|The key to activate a menu item.  Numbered from top to bottom.|
-|ModifierCommands|Disassemble*, UnlockDataDisk|The list of commands to require a modifier key to be held.  Ex: Alt + 1. This only affects the CommandN items.  See the Command List section below |
-|ModifierKeys|Shift, Alt|The modifier keys for the ModifierCommands|
-|CommandBinds|(See config file)|The list of commands and their shortcut key to invoke the command.  For example, D for Disassemble.|
+|ConfigVersion||Used internally|
+|EnableNumberedMode|false|Set to true to enable the positional hotkeys.  Ex: 2 = second item|
+|EnableCommandMode|true|Set to true to enable command binding hotkeys.  Ex:  D = Drop|
+|CommandBinds|Key and Command (See config file)|The list of commands and their shortcut keys to invoke the command.  For example, D for Disassemble.  To not bind a command, set the Key to "None"|
+|CommandN|0-9|Key bindings for the positional mode. Numbered from top to bottom.|
+|ModifierKeys|Shift, Alt|Positional Mode only. The list of keys that count as a modifier.|
+
 
 ### Command Binding Duplicate Note
-The Command Binding (E = Equip) can use the same key for multiple entries.  For example, Disassembly and DiassemblyAll will not show up on the same menu.
+The Command Binding mode can use the same key for multiple entries.  For example, Disassembly and DiassemblyAll will not show up on the same menu and is safe to reuse the same key.
 
-If the context menu has items with duplicate keys, the first entry will be chosen.
+If the context menu has more than item with the same key bind, the first entry will be chosen.
 
 ## Key List
 The list of valid keyboard keys can be found  at the bottom of https://docs.unity3d.com/ScriptReference/KeyCode.html
 
 # Command List
+
 The game currently supports the following commands for the Context Menu.
 
 ```
@@ -97,6 +92,12 @@ Thanks!
 Source code is available on GitHub https://github.com/NBKRedSpy/QM-ContextMenuHotkeys
 
 # Change Log
+
+## 3.1.0
+* Simplified enabling modes with a single setting.
+* Supports upgrading the configuration schema.
+* Added every context menu command in the config with unbound items set to KeyCode.None.
+* Highlights the hotkey on the menu items.
 
 ## 3.0.0
 * Supports Command Binding.

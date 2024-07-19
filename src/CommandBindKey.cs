@@ -10,6 +10,11 @@ using UnityEngine;
 
 namespace QM_ContextMenuHotkeys
 {
+
+    /// <summary>
+    /// A key mapping to a menu command.
+    /// Ex:  D to the Drop
+    /// </summary>
     public class CommandBindKey
     {
 

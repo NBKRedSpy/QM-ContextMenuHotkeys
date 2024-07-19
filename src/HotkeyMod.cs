@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Permissions;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -10,8 +11,23 @@ using static System.Runtime.CompilerServices.RuntimeHelpers;
 
 namespace QM_ContextMenuHotkeys
 {
-    public class HotkeyMod
+    public static class HotkeyMod
     {
+
+        /// <summary>
+        /// Only the command binds that have a key set (not Key.None)
+        /// Empty if the mode is disabled.
+        /// </summary>
+        private static List<CommandBindKey> ActiveCommandBinds { get; set; }
+
+        public static void Init(ModConfig config)
+        {
+            if(config.EnableCommandMode)
+            {
+                ActiveCommandBinds = config.CommandBinds.Where(x => x.Key != KeyCode.None).ToList();
+            }
+        }
+
         /// <summary>
         /// Handle in combat screens.
         /// </summary>
@@ -43,18 +59,20 @@ namespace QM_ContextMenuHotkeys
         {
             if (!contextMenu.IsActiveView) return;
 
-            HashSet<ContextMenuCommand> modifierCommands = Plugin.Config.ModifierCommands;
-            Dictionary<ContextMenuCommand, string> commandKeyBinds = ModConfig.KeyBindStrings;
-
-            List<CommonButton> menuCommandButtons = new List<CommonButton>(contextMenu.commandButtons);
             List<ContextMenuCommand> menuCommandBinds = contextMenu._commandBinds.Values.ToList();
+            List<CommonButton> menuCommandButtons = new List<CommonButton>(contextMenu.commandButtons);
 
-            CommonButton targetButton;
-            //----- Command binds check
-            targetButton = GetCommandKeyBindTarget(menuCommandButtons, menuCommandBinds);
+            CommonButton targetButton = null;
 
-            if(targetButton == null)
+            if(Plugin.Config.EnableCommandMode)
             {
+                //----- Command binds check
+                targetButton = GetCommandKeyBindTarget(menuCommandButtons, menuCommandBinds);
+            }
+
+            if (Plugin.Config.EnableNumberedMode && targetButton == null)
+            {
+                HashSet<ContextMenuCommand> modifierCommands = Plugin.Config.ModifierCommands;
                 targetButton = GetPositionalBind(modifierCommands, menuCommandButtons, menuCommandBinds);
             }
 
@@ -117,7 +135,7 @@ namespace QM_ContextMenuHotkeys
             List<ContextMenuCommand> menuCommandBinds)
         {
             //there may be more than one command with the same hotkey.  For example, the three disassembles.
-            List<CommandBindKey> matchingBinds = Plugin.Config.CommandBinds.Where(x => Input.GetKeyUp(x.Key)).ToList();
+            List<CommandBindKey> matchingBinds = ActiveCommandBinds.Where(x => Input.GetKeyUp(x.Key)).ToList();
 
             if(matchingBinds.Count == 0) return null;
 

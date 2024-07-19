@@ -3,31 +3,25 @@
 
 [h1]Info[/h1]
 
-Adds hotkeys to the context menus.  Both positional (0-9) as well as well as by command (E = equip).
-The keys for both positional and by command can be changed in the config.
-Either can be disabled.  See the configuration section for more info.
+Adds hotkeys to the context menus.
 
-Given the top item in image, which has both modes enabled:
-[list]
-[*]Pressing 1 will equip.
-[*]Pressing E will also equip.
-[*]Pressing 3 + Shift or Alt will Disassemble the item.
-[list]
-[*]The shift is for protection against accidental destructive commands and can be disabled.
-[/list]
-[/list]
+Supports both command binding (Q = Unequip) and positional binding (second item is 2).
 
-[h1]Configuration Upgrade Note[/h1]
+By default the command binding is enabled.
 
-This section will only affect users of the previous version of the mod and want to modify the settings in the new version.
+The key binds and the modes can be changed in the configuration file.
 
-The new version of the mod will not upgrade the previous version of the configuration.
+[h1]Update For Existing Users[/h1]
 
-To get all the new options, delete or rename the config file.  The next time the game is run, a fresh config file will be created.
+The latest update defaults to "command bind" mode instead of "both".
+The configuration has been simplified and now includes all context menu commands in the configuration file.
+The mod will automatically upgrade the existing configuration file to the latest version.
 
-[h2]Modifier Keys[/h2]
+Use the new EnableNumberedMode and EnableCommandMode value to toggle each mode.  It is no longer required to modify the key binds to disable a mode.
 
-Any command with a '+' requires holding down an alt or shift key to activate.
+[h1]Positional Mode Modifier Keys[/h1]
+
+Any command with a '+' requires holding down the number key and the alt or shift key to activate.
 This is to safeguard against accidentally invoking disassembly commands.
 
 The modifier keys (shift, alt, etc.) and the list of commands that require a modifier key can be configured.
@@ -36,13 +30,6 @@ The modifier keys (shift, alt, etc.) and the list of commands that require a mod
 
 The configuration file is located at [i]%UserProfile%\AppData\LocalLow\Magnum Scriptum Ltd\Quasimorph\QM_ContextMenuHotkeys.json[/i].
 The file will be created the first time the game is run.
-
-[h1]Disabling Modes[/h1]
-
-To disable the positional options (0-9), set all CommandN values to [i]"None"[/i] .
-to disable all Command Binds (E = Equip), set the CommandBinds to [i][][/i] .
-
-Deleting the entries instead of making the modifications above will cause the mod to still use the defaults.
 
 [h2]Settings[/h2]
 
@@ -57,19 +44,43 @@ Note: if the config file does not have all of the settings below, delete the fil
 [/td]
 [/tr]
 [tr]
+[td]ConfigVersion
+[/td]
+[td]
+[/td]
+[td]Used internally
+[/td]
+[/tr]
+[tr]
+[td]EnableNumberedMode
+[/td]
+[td]false
+[/td]
+[td]Set to true to enable the positional hotkeys.  Ex: 2 = second item
+[/td]
+[/tr]
+[tr]
+[td]EnableCommandMode
+[/td]
+[td]true
+[/td]
+[td]Set to true to enable command binding hotkeys.  Ex:  D = Drop
+[/td]
+[/tr]
+[tr]
+[td]CommandBinds
+[/td]
+[td]Key and Command (See config file)
+[/td]
+[td]The list of commands and their shortcut keys to invoke the command.  For example, D for Disassemble.  To not bind a command, set the Key to "None"
+[/td]
+[/tr]
+[tr]
 [td]CommandN
 [/td]
 [td]0-9
 [/td]
-[td]The key to activate a menu item.  Numbered from top to bottom.
-[/td]
-[/tr]
-[tr]
-[td]ModifierCommands
-[/td]
-[td]Disassemble*, UnlockDataDisk
-[/td]
-[td]The list of commands to require a modifier key to be held.  Ex: Alt + 1. This only affects the CommandN items.  See the Command List section below
+[td]Key bindings for the positional mode. Numbered from top to bottom.
 [/td]
 [/tr]
 [tr]
@@ -77,24 +88,16 @@ Note: if the config file does not have all of the settings below, delete the fil
 [/td]
 [td]Shift, Alt
 [/td]
-[td]The modifier keys for the ModifierCommands
-[/td]
-[/tr]
-[tr]
-[td]CommandBinds
-[/td]
-[td](See config file)
-[/td]
-[td]The list of commands and their shortcut key to invoke the command.  For example, D for Disassemble.
+[td]Positional Mode only. The list of keys that count as a modifier.
 [/td]
 [/tr]
 [/table]
 
 [h3]Command Binding Duplicate Note[/h3]
 
-The Command Binding (E = Equip) can use the same key for multiple entries.  For example, Disassembly and DiassemblyAll will not show up on the same menu.
+The Command Binding mode can use the same key for multiple entries.  For example, Disassembly and DiassemblyAll will not show up on the same menu and is safe to reuse the same key.
 
-If the context menu has items with duplicate keys, the first entry will be chosen.
+If the context menu has more than item with the same key bind, the first entry will be chosen.
 
 [h2]Key List[/h2]
 
@@ -140,6 +143,14 @@ Thanks!
 Source code is available on GitHub https://github.com/NBKRedSpy/QM-ContextMenuHotkeys
 
 [h1]Change Log[/h1]
+
+[h2]3.1.0[/h2]
+[list]
+[*]Simplified enabling modes with a single setting.
+[*]Supports upgrading the configuration schema.
+[*]Added every context menu command in the config with unbound items set to KeyCode.None.
+[*]Highlights the hotkey on the menu items.
+[/list]
 
 [h2]3.0.0[/h2]
 [list]
