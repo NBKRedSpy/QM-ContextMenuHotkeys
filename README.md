@@ -93,6 +93,9 @@ Source code is available on GitHub https://github.com/NBKRedSpy/QM-ContextMenuHo
 
 # Change Log
 
+## 3.2.0
+* .8 compatible.
+
 ## 3.1.0
 * Simplified enabling modes with a single setting.
 * Supports upgrading the configuration schema.

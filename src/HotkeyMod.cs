@@ -78,7 +78,7 @@ namespace QM_ContextMenuHotkeys
 
             if (targetButton == null) return;
 
-            contextMenu.OnContextCommandClick(targetButton);
+            contextMenu.OnContextCommandClick(targetButton,1);
 
         }
 

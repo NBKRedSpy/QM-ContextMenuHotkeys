@@ -4,9 +4,26 @@
     <OutputType>Library</OutputType>
     <RootNamespace>QM_ContextMenuHotkeys</RootNamespace>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-	  <VersionPrefix>3.1.0</VersionPrefix>
+	  <VersionPrefix>3.2.0</VersionPrefix>
   </PropertyGroup>
-  <ItemGroup>
+	<PropertyGroup>
+		<GAME_NAME>Quasimorph</GAME_NAME>
+		<SteamId>3286341389</SteamId>
+		<AssemblyVersion>$(VersionPrefix)</AssemblyVersion>
+		<PackageFolder>$(ProjectDir)../package/</PackageFolder>
+	</PropertyGroup>
+	<PropertyGroup>
+		<GAME_PATH Condition="!Exists('$(GAME_PATH)')">$([MSBuild]::GetRegistryValueFromView('HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App $(GAME_STEAM_ID)', 'InstallLocation', null, RegistryView.Registry64, RegistryView.Registry32))</GAME_PATH>
+		<_SteamLibraryPath>$([MSBuild]::GetRegistryValueFromView('HKEY_CURRENT_USER\SOFTWARE\Valve\Steam', 'SteamPath', null, RegistryView.Registry32))</_SteamLibraryPath>
+		<GAME_PATH Condition="!Exists('$(GAME_PATH)') AND '$(_SteamLibraryPath)' != ''">$(_SteamLibraryPath)\steamapps\common\$(GAME_NAME)</GAME_PATH>
+		<GAME_PATH Condition="!Exists('$(GAME_PATH)')">C:\Program Files\Steam\steamapps\common\$(GAME_NAME)</GAME_PATH>
+		<GAME_PATH Condition="!Exists('$(GAME_PATH)')">C:\Program Files (x86)\Steam\steamapps\common\$(GAME_NAME)</GAME_PATH>
+	</PropertyGroup>
+	<PropertyGroup>
+		<WorkshopPath>$(GAME_PATH)\..\..\workshop\content\2059170\$(SteamId)\</WorkshopPath>
+		<ManagedPath>$(GAME_PATH)\$(GAME_NAME)_Data\Managed\</ManagedPath>
+	</PropertyGroup>
+	<ItemGroup>
     <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.2">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
@@ -41,4 +58,16 @@
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="set DeployDir=D:\Games\Steam\steamapps\workshop\content\2059170\3286341389\&#xD;&#xA;echo %25DeployDir%25&#xD;&#xA;xcopy /f /y  $(TargetDir)$(TargetName).* %25DeployDir%25&#xD;&#xA;xcopy /f /y &quot;C:\Windows\Microsoft.NET\Framework64\v4.0.30319\System.Data.dll&quot; %25DeployDir%25&#xD;&#xA;xcopy /f /y &quot;C:\Windows\Microsoft.NET\Framework64\v4.0.30319\System.Runtime.Serialization.dll&quot; %25DeployDir%25&#xD;&#xA;xcopy /f /y  $(TargetDir)Newtonsoft.Json.dll %25DeployDir%25&#xD;&#xA;xcopy /f /y   $(TargetDir)0Harmony.dll %25deployDir%25&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;" />
   </Target>
+	<Target Condition="'$(SteamId)'!=''" Name="PostBuildPackage" AfterTargets="PostBuildEvent">
+		<ItemGroup>
+			<WorkshopSourceFile Include="$(WorkshopPath)*.*" />
+			<PackageRemoveFiles Include="$(PackageFolder)$(TargetName)/*.pdb" />
+		</ItemGroup>
+
+		<Message Text="---------- Creating Package: $(PackageFolder)$(TargetName)/*.pdb" Importance="high" />
+		<RemoveDir Directories="$(PackageFolder)" />
+		<Copy SourceFiles="@(WorkshopSourceFile)" DestinationFolder="$(PackageFolder)$(TargetName)"></Copy>
+		<Delete Files="@(PackageRemoveFiles)" />
+		<ZipDirectory SourceDirectory="$(PackageFolder)" DestinationFile="$(PackageFolder)../$(TargetName).zip" Overwrite="true" />
+	</Target>
 </Project>
