@@ -4,7 +4,6 @@
     <OutputType>Library</OutputType>
     <RootNamespace>QM_ContextMenuHotkeys</RootNamespace>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-	  <VersionPrefix>3.2.0</VersionPrefix>
   </PropertyGroup>
 	<PropertyGroup>
 		<GAME_NAME>Quasimorph</GAME_NAME>

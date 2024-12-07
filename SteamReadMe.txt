@@ -28,7 +28,7 @@ The modifier keys (shift, alt, etc.) and the list of commands that require a mod
 
 [h1]Configuration[/h1]
 
-The configuration file is located at [i]%UserProfile%\AppData\LocalLow\Magnum Scriptum Ltd\Quasimorph\QM_ContextMenuHotkeys.json[/i].
+The configuration file is located at [i]%UserProfile%\AppData\LocalLow\Magnum Scriptum Ltd\Quasimorph_ModConfigs\QM_ContextMenuHotkeys\QM_ContextMenuHotkeys.json[/i].
 The file will be created the first time the game is run.
 
 [h2]Settings[/h2]
@@ -143,6 +143,11 @@ Thanks!
 Source code is available on GitHub https://github.com/NBKRedSpy/QM-ContextMenuHotkeys
 
 [h1]Change Log[/h1]
+
+[h2]3.3.0[/h2]
+[list]
+[*]Moved config file directory.
+[/list]
 
 [h2]3.2.0[/h2]
 [list]
