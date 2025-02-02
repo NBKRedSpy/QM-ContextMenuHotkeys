@@ -59,8 +59,10 @@ namespace QM_ContextMenuHotkeys
         {
             if (!contextMenu.IsActiveView) return;
 
-            List<ContextMenuCommand> menuCommandBinds = contextMenu._commandBinds.Values.ToList();
-            List<CommonButton> menuCommandButtons = new List<CommonButton>(contextMenu.commandButtons);
+            List<ContextMenuCommand> menuCommandBinds = contextMenu._commandBinds.Values
+                .Cast<ContextMenuCommand>().ToList();
+
+            List<CommonButton> menuCommandButtons = new List<CommonButton>(contextMenu._commandBinds.Keys);
 
             CommonButton targetButton = null;
 

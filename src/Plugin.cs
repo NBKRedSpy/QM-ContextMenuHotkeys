@@ -67,12 +67,12 @@ namespace QM_ContextMenuHotkeys
             }
             
             harmony.Patch(AccessTools.Method(typeof(MGSC.ContextMenu), nameof(MGSC.ContextMenu.InitCommands)),
-                null, new HarmonyMethod(typeof(ContextMenu_InitCommands_Patch), nameof(ContextMenu_InitCommands_Patch.Postfix))
+                null, new HarmonyMethod(typeof(ContextMenu_InitCommands_Patch), nameof(ContextMenu_InitCommands_Patch.AddHotkeyHighlightToButtons))
                 );
 
             harmony.Patch(
                 AccessTools.Method(typeof(MGSC.NoPlayerContextMenu), nameof(MGSC.NoPlayerContextMenu.InitCommands)),
-                null, new HarmonyMethod(typeof(ContextMenu_InitCommands_Patch), nameof(ContextMenu_InitCommands_Patch.Postfix))
+                null, new HarmonyMethod(typeof(ContextMenu_InitCommands_Patch), nameof(ContextMenu_InitCommands_Patch.AddHotkeyHighlightToButtons))
                 );
         }
 

@@ -146,6 +146,11 @@ Source code is available on GitHub https://github.com/NBKRedSpy/QM-ContextMenuHo
 
 [h2]3.3.0[/h2]
 [list]
+[*]v0.8.5 compatible.
+[/list]
+
+[h2]3.3.0[/h2]
+[list]
 [*]Moved config file directory.
 [/list]
 

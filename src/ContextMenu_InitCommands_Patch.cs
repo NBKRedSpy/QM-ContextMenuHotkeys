@@ -11,43 +11,47 @@ namespace QM_ContextMenuHotkeys
 {
     public static class ContextMenu_InitCommands_Patch
     {
-        public static void Postfix(ContextMenu __instance)
+        /// <summary>
+        /// Adds any hotkeys that are defined to the text of the Context Menu options.
+        /// Ex: E for Eat
+        /// </summary>
+        /// <param name="__instance"></param>
+        public static void AddHotkeyHighlightToButtons(BaseContextMenu __instance)
         {
 
             HashSet<ContextMenuCommand> modifierCommands = Plugin.Config.ModifierCommands;
 
-            //The command binds array will match the buttons array
-            List<ContextMenuCommand> commandBinds = __instance._commandBinds.Values.ToList();
+            int menuIndex = 0;
 
-            for (int i = 0; i < __instance._activeButtonsList.Count; i++)
+            foreach (var commandBind in __instance._commandBinds)
             {
-                CommonButton command = __instance._activeButtonsList[i];
+                CommonButton commandButton = commandBind.Key;
+                ContextMenuCommand command = (ContextMenuCommand)commandBind.Value;
 
                 string hotkeyText = "";
                 if(Plugin.Config.EnableNumberedMode)
                 {
-                    hotkeyText = ModConfig.KeyStrings[i];
+                    hotkeyText = ModConfig.KeyStrings[menuIndex];
 
                     if (hotkeyText != "")
                     {
-                        hotkeyText += modifierCommands.Contains(commandBinds[i]) ?
+                        hotkeyText += modifierCommands.Contains(command) ?
                             "+ " : " ";
                     }
                 }
-
 
                 if (Plugin.Config.EnableCommandMode)
                 {
                     string keyString;
 
                     //Key bindings if available.
-                    if (ModConfig.KeyBindStrings.TryGetValue(commandBinds[i], out keyString))
+                    if (ModConfig.KeyBindStrings.TryGetValue(command, out keyString))
                     {
                         hotkeyText = keyString + " " + hotkeyText;
                     }
                 }
 
-                command.captionText.text = $"<color=\"yellow\">{hotkeyText}</color>{command.captionText.text}";
+                commandButton.captionText.text = $"<color=\"yellow\">{hotkeyText}</color>{commandButton.captionText.text}";
             }
         }
     }
