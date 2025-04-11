@@ -22,10 +22,7 @@ namespace QM_ContextMenuHotkeys
 
         public static void Init(ModConfig config)
         {
-            if(config.EnableCommandMode)
-            {
-                ActiveCommandBinds = config.CommandBinds.Where(x => x.Key != KeyCode.None).ToList();
-            }
+            ActiveCommandBinds = config.CommandBinds.Where(x => x.Key != KeyCode.None).ToList();
         }
 
         /// <summary>
@@ -35,7 +32,7 @@ namespace QM_ContextMenuHotkeys
         [Hook(ModHookType.DungeonUpdateAfterGameLoop)]
         public static void DungeonUpdateAfterGameLoop(IModContext context)
         {
-            MGSC.ContextMenu contextMenu = DungeonGameMode.Instance._dungeonUI.ContextMenu;
+            CommonContextMenu contextMenu = (CommonContextMenu) UI.GetActiveViews().FirstOrDefault(x => x is CommonContextMenu);
 
             HandleMenuContext(contextMenu);
         }
@@ -47,17 +44,14 @@ namespace QM_ContextMenuHotkeys
         [Hook(ModHookType.SpaceUpdateBeforeGameLoop)]
         public static void SpaceUpdateBeforeGameLoop(IModContext context)
         {
-            MGSC.ContextMenu contextMenu = SingletonMonoBehaviour<SpaceUI>.Instance.NoPlayerContextMenu;
+            CommonContextMenu contextMenu = (CommonContextMenu)UI.GetActiveViews().FirstOrDefault(x => x is CommonContextMenu);
 
             HandleMenuContext(contextMenu);
         }
 
-
-        private static CommonButton PreviousFirstButton = null;
-
-        public static void HandleMenuContext(MGSC.ContextMenu contextMenu)
+        public static void HandleMenuContext(CommonContextMenu contextMenu)
         {
-            if (!contextMenu.IsActiveView) return;
+            if (contextMenu is null || !contextMenu.isActiveAndEnabled) return;
 
             List<ContextMenuCommand> menuCommandBinds = contextMenu._commandBinds.Values
                 .Cast<ContextMenuCommand>().ToList();
@@ -66,17 +60,8 @@ namespace QM_ContextMenuHotkeys
 
             CommonButton targetButton = null;
 
-            if(Plugin.Config.EnableCommandMode)
-            {
-                //----- Command binds check
-                targetButton = GetCommandKeyBindTarget(menuCommandButtons, menuCommandBinds);
-            }
-
-            if (Plugin.Config.EnableNumberedMode && targetButton == null)
-            {
-                HashSet<ContextMenuCommand> modifierCommands = Plugin.Config.ModifierCommands;
-                targetButton = GetPositionalBind(modifierCommands, menuCommandButtons, menuCommandBinds);
-            }
+            //----- Command binds check
+            targetButton = GetCommandKeyBindTarget(menuCommandButtons, menuCommandBinds);
 
             if (targetButton == null) return;
 
@@ -85,47 +70,7 @@ namespace QM_ContextMenuHotkeys
         }
 
         /// <summary>
-        /// Checks for a positional keybind.
-        /// Returns the button if there is a match.
-        /// </summary>
-        /// <param name="modifierCommands"></param>
-        /// <param name="menuCommandButtons"></param>
-        /// <param name="menuCommandBinds"></param>
-        /// <param name=""></param>
-        /// <returns></returns>
-        private static CommonButton GetPositionalBind(HashSet<ContextMenuCommand> modifierCommands, List<CommonButton> menuCommandButtons, 
-            List<ContextMenuCommand> menuCommandBinds)
-        {
-            //The command binds array will match the buttons array
-            int buttonIndex =
-                Input.GetKeyUp(Plugin.Config.Command1) ? 0 :
-                Input.GetKeyUp(Plugin.Config.Command2) ? 1 :
-                Input.GetKeyUp(Plugin.Config.Command3) ? 2 :
-                Input.GetKeyUp(Plugin.Config.Command4) ? 3 :
-                Input.GetKeyUp(Plugin.Config.Command5) ? 4 :
-                Input.GetKeyUp(Plugin.Config.Command6) ? 5 :
-                Input.GetKeyUp(Plugin.Config.Command7) ? 6 :
-                Input.GetKeyUp(Plugin.Config.Command8) ? 7 :
-                Input.GetKeyUp(Plugin.Config.Command9) ? 8 :
-                Input.GetKeyUp(Plugin.Config.Command10) ? 9 : -1
-                ;
-
-            if (buttonIndex == -1 || buttonIndex >= menuCommandBinds.Count) return null;
-
-            //Check if the command requires a modifier.  Generally Shift or Alt + <number>
-            if (modifierCommands.Contains(menuCommandBinds[buttonIndex]))
-            {
-                //This command requires a shift.
-                if (!Plugin.Config.ModifierKeys.Any(x => Input.GetKey(x)))
-                {
-                    return null;
-                }
-            }
-
-            return menuCommandButtons[buttonIndex];
-        }
-
-        /// <summary>
+        /// Checks if the Input.GetKeyUp matches one of the hotkey binds.
         /// Searches the list of command based bindings for a match.
         /// If found, returns the matching button.  Else null.
         /// </summary>

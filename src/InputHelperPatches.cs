@@ -24,65 +24,18 @@ namespace QM_ContextMenuHotkeys
                 new HarmonyMethod(typeof(InputHelperPatches), nameof(GetKeyPrefix)) 
                 );
 
-            harmony.Patch(AccessTools.Method(typeof(InputHelper), nameof(InputHelper.GetKeyDown), null),
-                null, new HarmonyMethod(typeof(InputHelperPatches), nameof(GetKeyNoCodePostfix))
-                );
-
         }
-
-
-        public static void GetKeyNoCodePostfix(ref KeyCode __result)
-        {
-
-            //Debug.Log($"GetKeyNoCodePostfix {__result}");
-
-            switch (__result)
-            {
-                case KeyCode.None:
-                case KeyCode.Menu:
-                case KeyCode.Escape:
-                    return;
-            }
-
-            if(IsContextWindowOpen())
-            {
-                __result = KeyCode.None;
-            }
-
-        }
-        //public static bool GetKeyNoCode()
-        //{
-
-        //    if (Input.GetKey(KeyCode.Escape) || Input.GetKey(KeyCode.Menu)) return true;
-
-        //    bool contextIsOpen = IsContextWindowOpen();
-
-        //    if (IsContextWindowOpen())
-        //    {
-        //        Debug.Log($"{DateTime.Now.Ticks} {InputHelper.GetKey()}")
-        //    }
-
-
-        //    return !contextIsOpen;
-        //}
-
-
-
 
         public static bool GetKeyPrefix(KeyCode keyCode)
         {
             if(keyCode == KeyCode.Menu || keyCode == KeyCode.Escape) return true;
-
-            //Debug.Log($"GetKeyPrefix {keyCode}");
 
             return !IsContextWindowOpen();
         }
 
         public static bool IsContextWindowOpen()
         {
-
-            return SingletonMonoBehaviour<SpaceUI>.Instance?.NoPlayerContextMenu.IsActiveView == true
-                || DungeonUI.Instance?.ContextMenu.IsActiveView == true;
+            return UI.GetActiveViews().Any(x => x is CommonContextMenu);
         }
     }
 }

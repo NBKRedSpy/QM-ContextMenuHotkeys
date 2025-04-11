@@ -37,6 +37,12 @@ namespace QM_ContextMenuHotkeys
         /// </summary>
         private static string AllModsConfigFolder { get; set; }
 
+        internal static JsonSerializerSettings JsonSettings { get; } = new JsonSerializerSettings()
+        {
+            Formatting = Formatting.Indented,
+            ObjectCreationHandling = ObjectCreationHandling.Replace
+        };
+
         static Plugin()
         {
             ModAssemblyName = Assembly.GetExecutingAssembly().GetName().Name;
@@ -61,19 +67,9 @@ namespace QM_ContextMenuHotkeys
 
             Harmony harmony = new Harmony("nbk_redspy.QM_ContextMenuHotkeys");
 
-            if(!Config.DisableKeyLock)
-            {
-                InputHelperPatches.Patch(harmony);
-            }
-            
-            harmony.Patch(AccessTools.Method(typeof(MGSC.ContextMenu), nameof(MGSC.ContextMenu.InitCommands)),
-                null, new HarmonyMethod(typeof(ContextMenu_InitCommands_Patch), nameof(ContextMenu_InitCommands_Patch.AddHotkeyHighlightToButtons))
-                );
+            InputHelperPatches.Patch(harmony);
 
-            harmony.Patch(
-                AccessTools.Method(typeof(MGSC.NoPlayerContextMenu), nameof(MGSC.NoPlayerContextMenu.InitCommands)),
-                null, new HarmonyMethod(typeof(ContextMenu_InitCommands_Patch), nameof(ContextMenu_InitCommands_Patch.AddHotkeyHighlightToButtons))
-                );
+            harmony.PatchAll();
         }
 
         /// <summary>
@@ -99,38 +95,46 @@ namespace QM_ContextMenuHotkeys
             }
         }
 
+        /// <summary>
+        /// Loads the config file from disk.  If it doesn't exist, creates a new one with defaults.
+        /// Note that this will also re-write the json text file if the version on disk if
+        /// it doesn't match the existing config settings.  For example, if it is missing a setting
+        /// or has legacy settings that are no longer used.
+        /// </summary>
         private static void LoadConfig()
         {
-            JsonSerializerSettings settings = new JsonSerializerSettings()
-            {
-                Formatting = Formatting.Indented,
-                ObjectCreationHandling = ObjectCreationHandling.Replace
-            };
-
-
 
             if (!File.Exists(ConfigPath))
             {
-                CreateDefaultConfig(ConfigPath, settings);
+                CreateDefaultConfig(ConfigPath, JsonSettings);
                 return;
             }
 
             try
             {
-                Config = JsonConvert.DeserializeObject<ModConfig>(File.ReadAllText(ConfigPath), settings);
+                string jsonText = File.ReadAllText(ConfigPath);
+
+                //Handle the commands that were changed from enum values to magic numbers;
+                jsonText.Replace("\"SplitStacks\"", SpecialCommands.SplitStacks.ToString());
+                jsonText.Replace("\"SplitStacksConfirm\"", SpecialCommands.SplitStacksConfirm.ToString());
+
+                Config = JsonConvert.DeserializeObject<ModConfig>(jsonText, JsonSettings);
 
                 if(ConvertToLatest(Config))
                 {
                     //Write the file to have the latest options.
                     Debug.Log($"Upgrading config to version {Config.ConfigVersion}");   
-                    File.WriteAllText(ConfigPath, JsonConvert.SerializeObject(Config, settings));
+                    File.WriteAllText(ConfigPath, JsonConvert.SerializeObject(Config, JsonSettings));
                 }
+
+                //Re-write the config with any missing defaults and remove any old settings.
+                Config.RewriteConfigFileIfDifferent(ConfigPath, jsonText);
             }
             catch (Exception ex)
             {
                 Debug.LogError($"Unable to process config {ConfigPath}.  Loading defaults");
                 Debug.LogError(ex);
-                CreateDefaultConfig(ConfigPath, settings);
+                CreateDefaultConfig(ConfigPath, JsonSettings);
             }
         }
 

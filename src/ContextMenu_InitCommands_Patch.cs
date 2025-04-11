@@ -6,9 +6,13 @@ using System.Text;
 using System.Threading.Tasks;
 using HarmonyLib;
 using MGSC;
+using UnityEngine.Experimental.Rendering;
 
 namespace QM_ContextMenuHotkeys
 {
+
+
+    [HarmonyPatch(typeof(CommonContextMenu), nameof(CommonContextMenu.SetupCommand))]
     public static class ContextMenu_InitCommands_Patch
     {
         /// <summary>
@@ -16,43 +20,31 @@ namespace QM_ContextMenuHotkeys
         /// Ex: E for Eat
         /// </summary>
         /// <param name="__instance"></param>
-        public static void AddHotkeyHighlightToButtons(BaseContextMenu __instance)
+        public static void Postfix(CommonContextMenu __instance, int bindedVal, bool interactable)
         {
 
-            HashSet<ContextMenuCommand> modifierCommands = Plugin.Config.ModifierCommands;
+            if (!interactable) return;
 
-            int menuIndex = 0;
+            //The SetupCommand loops through all of the buttons each time it is adding a new command (via SetupCommand).
+            //I think it is trying to find a context menu CommonButton that hasn't been used yet.
+            //I'm guessing that there will never be an existing context menu button that isn't available.
+            //Probably pre-allocated.
 
-            foreach (var commandBind in __instance._commandBinds)
-            {
-                CommonButton commandButton = commandBind.Key;
-                ContextMenuCommand command = (ContextMenuCommand)commandBind.Value;
+            //The added button will the last item in the _commandBinds list, even if it is not enabled (not interactable).
 
-                string hotkeyText = "";
-                if(Plugin.Config.EnableNumberedMode)
-                {
-                    hotkeyText = ModConfig.KeyStrings[menuIndex];
+            CommonButton commandButton = __instance._activeButtonsList.Last();
 
-                    if (hotkeyText != "")
-                    {
-                        hotkeyText += modifierCommands.Contains(command) ?
-                            "+ " : " ";
-                    }
-                }
+            string keyString;
 
-                if (Plugin.Config.EnableCommandMode)
-                {
-                    string keyString;
+            //Note that currently the game doesn't always use the ContextMenuCommand.  As of v0.8.6,
+            //Split is 999999, and SplitStacks is 100000.  Don't know why this was moved out
+            //of the ContextMenuCommand enum.
 
-                    //Key bindings if available.
-                    if (ModConfig.KeyBindStrings.TryGetValue(command, out keyString))
-                    {
-                        hotkeyText = keyString + " " + hotkeyText;
-                    }
-                }
+            if (!ModConfig.KeyBindStrings.TryGetValue((ContextMenuCommand)bindedVal, out keyString)) return;
 
-                commandButton.captionText.text = $"<color=\"yellow\">{hotkeyText}</color>{commandButton.captionText.text}";
-            }
+            string hotkeyText = keyString + " ";
+
+            commandButton.captionText.text = $"<color=\"yellow\">{hotkeyText}</color>{commandButton.captionText.text}";
         }
     }
 }

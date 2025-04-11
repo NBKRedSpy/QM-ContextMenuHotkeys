@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -35,38 +36,7 @@ namespace QM_ContextMenuHotkeys
         /// The configuration version.  Used to assist with conversion
         /// </summary>
         public string ConfigVersion;
-
-        public bool EnableNumberedMode { get; set; } = false;
-        public bool EnableCommandMode { get; set; } = true;
-
         public List<CommandBindKey> CommandBinds { get; set; }
-
-
-        [JsonConverter(typeof(StringEnumConverter))]
-        public KeyCode Command1 { get; set; } = KeyCode.Alpha1;
-        [JsonConverter(typeof(StringEnumConverter))]
-        public KeyCode Command2 { get; set; } = KeyCode.Alpha2;
-        [JsonConverter(typeof(StringEnumConverter))]
-        public KeyCode Command3 { get; set; } = KeyCode.Alpha3;
-        [JsonConverter(typeof(StringEnumConverter))]
-        public KeyCode Command4 { get; set; } = KeyCode.Alpha4;
-        [JsonConverter(typeof(StringEnumConverter))]
-        public KeyCode Command5 { get; set; } = KeyCode.Alpha5;
-        [JsonConverter(typeof(StringEnumConverter))]
-        public KeyCode Command6 { get; set; } = KeyCode.Alpha6;
-        [JsonConverter(typeof(StringEnumConverter))]
-        public KeyCode Command7 { get; set; } = KeyCode.Alpha7;
-        [JsonConverter(typeof(StringEnumConverter))]
-        public KeyCode Command8 { get; set; } = KeyCode.Alpha8;
-        [JsonConverter(typeof(StringEnumConverter))]
-        public KeyCode Command9 { get; set; } = KeyCode.Alpha9;
-        [JsonConverter(typeof(StringEnumConverter))]
-        public KeyCode Command10 { get; set; } = KeyCode.Alpha0;
-
-        /// <summary>
-        /// If true, will disable the patch that blocks the game's input handler.
-        /// </summary>
-        public bool DisableKeyLock { get; set; } = false;
 
         public ModConfig()
         {
@@ -83,7 +53,10 @@ namespace QM_ContextMenuHotkeys
                 new CommandBindKey(KeyCode.T, ContextMenuCommand.Take),
                 new CommandBindKey(KeyCode.Q, ContextMenuCommand.Unequip),
                 new CommandBindKey(KeyCode.W, ContextMenuCommand.UnloadAmmo),
-                new CommandBindKey(KeyCode.V, ContextMenuCommand.SplitStacks),
+                //Split Stacks is a hardcoded value now and no longer in the enum.  
+                //I don't know why it was moved out.
+                new CommandBindKey(KeyCode.V, (ContextMenuCommand)SpecialCommands.SplitStacks),
+                new CommandBindKey(KeyCode.Alpha3, (ContextMenuCommand)SpecialCommands.LockItemsModToggle)
             };
 
             //Add any binds that are not set.  This is to assist users setting up the commands without having to 
@@ -110,44 +83,9 @@ namespace QM_ContextMenuHotkeys
             CommandBinds.AddRange(newCommands);
         }
 
-        [JsonConverter(typeof(JsonArrayEnumConverter<HashSet<ContextMenuCommand>, ContextMenuCommand>))]
-        public HashSet<ContextMenuCommand> ModifierCommands { get; set; } = new HashSet<ContextMenuCommand>()
-        {
-            ContextMenuCommand.Disassemble,
-            ContextMenuCommand.DisassembleX1,
-            ContextMenuCommand.DisassembleAll,
-            ContextMenuCommand.UnlockDatadisk,
-        };
-
-        /// <summary>
-        /// The modifier keys required for ModiferCommands
-        /// </summary>
-        [JsonConverter(typeof(JsonArrayEnumConverter<List<KeyCode>, KeyCode>))]
-        public List<KeyCode> ModifierKeys { get; set; } = new List<KeyCode>()
-        {
-            KeyCode.LeftShift,
-            KeyCode.RightShift,
-            KeyCode.LeftAlt,
-            KeyCode.RightAlt
-        };
-
         public void InitKeyStrings()
         {
             KeyBindStrings = CommandBinds.ToDictionary(x => x.Command, x => FormatKeyCode(x.Key));
-
-            KeyStrings = new List<string>()
-            {
-                FormatKeyCode(Command1),
-                FormatKeyCode(Command2),
-                FormatKeyCode(Command3),
-                FormatKeyCode(Command4),
-                FormatKeyCode(Command5),
-                FormatKeyCode(Command6),
-                FormatKeyCode(Command7),
-                FormatKeyCode(Command8),
-                FormatKeyCode(Command9),
-                FormatKeyCode(Command10),
-            };
         }
 
         public string FormatKeyCode(KeyCode code)
@@ -201,5 +139,22 @@ namespace QM_ContextMenuHotkeys
                     return code.ToString();
             }
         }
+
+        /// <summary>
+        /// Used to re-write the config file to remove any settings that are no longer used
+        /// and new defaults.
+        /// This is a bit of a heavy handed hack to get the config file to be up to date.
+        /// </summary>
+        /// <param name="configPath">The path to the config file</param>
+        /// <param name="existingText">The text that was loaded from the config file on disk.</param>
+        public void RewriteConfigFileIfDifferent(string configPath, string existingJson)
+        {
+            string newJson = JsonConvert.SerializeObject(this, Plugin.JsonSettings);
+
+            if (existingJson == newJson) return;
+
+            File.WriteAllText(configPath, newJson);
+        }
+
     }
 }
