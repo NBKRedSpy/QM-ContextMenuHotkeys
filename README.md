@@ -19,9 +19,8 @@ The file will be created the first time the game is run.
 |ConfigVersion||Used internally|
 |CommandBinds|Key and Command (See config file)|The list of commands and their shortcut keys to invoke the command.  For example, D for Disassemble.  To not bind a command, set the Key to "None"|
 
-### Important - Divide Stacks
-As of 0.8.6, the divide stacks command (aka split stacks internally) is now the value of 99999.
-This is due to an internal change in the game.  Existing configs will have the SplitStacks value automatically updated to the number version.
+### Important - Divide Stacks 
+The divide stacks and confirm commands are special in that they use a number.  Divide is 99999 and confirm is 100000.
 
 ### Command Binding Duplicate Note
 The Command Binding mode can use the same key for multiple entries.  For example, Disassembly and DiassemblyAll will not show up on the same menu and is safe to reuse the same key.
@@ -71,6 +70,10 @@ Thanks!
 Source code is available on GitHub https://github.com/NBKRedSpy/QM-ContextMenuHotkeys
 
 # Change Log
+## 3.5.2
+* Added the "Split Stacks Confirm" to the docs and the default config.
+    * Thank you to Steam user Skrypt for reporting this.
+
 ## 3.5.0
 * v0.8.6 compatibility
 * Removed positional mode.

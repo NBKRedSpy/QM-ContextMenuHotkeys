@@ -41,8 +41,7 @@ The file will be created the first time the game is run.
 
 [h3]Important - Divide Stacks[/h3]
 
-As of 0.8.6, the divide stacks command (aka split stacks internally) is now the value of 99999.
-This is due to an internal change in the game.  Existing configs will have the SplitStacks value automatically updated to the number version.
+The divide stacks and confirm commands are special in that they use a number.  Divide is 99999 and confirm is 100000.
 
 [h3]Command Binding Duplicate Note[/h3]
 
@@ -95,6 +94,14 @@ Thanks!
 Source code is available on GitHub https://github.com/NBKRedSpy/QM-ContextMenuHotkeys
 
 [h1]Change Log[/h1]
+
+[h2]3.5.2[/h2]
+[list]
+[*]Added the "Split Stacks Confirm" to the docs and the default config.
+[list]
+[*]Thank you to Steam user Skrypt for reporting this.
+[/list]
+[/list]
 
 [h2]3.5.0[/h2]
 [list]

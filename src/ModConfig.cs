@@ -56,6 +56,7 @@ namespace QM_ContextMenuHotkeys
                 //Split Stacks is a hardcoded value now and no longer in the enum.  
                 //I don't know why it was moved out.
                 new CommandBindKey(KeyCode.V, (ContextMenuCommand)SpecialCommands.SplitStacks),
+                new CommandBindKey(KeyCode.V, (ContextMenuCommand)SpecialCommands.SplitStacksConfirm),
                 new CommandBindKey(KeyCode.Alpha3, (ContextMenuCommand)SpecialCommands.LockItemsModToggle)
             };
 
