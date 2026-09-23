@@ -53,11 +53,22 @@ namespace QM_ContextMenuHotkeys
                 new CommandBindKey(KeyCode.T, ContextMenuCommand.Take),
                 new CommandBindKey(KeyCode.Q, ContextMenuCommand.Unequip),
                 new CommandBindKey(KeyCode.W, ContextMenuCommand.UnloadAmmo),
-                //Split Stacks is a hardcoded value now and no longer in the enum.  
-                //I don't know why it was moved out.
-                new CommandBindKey(KeyCode.V, (ContextMenuCommand)SpecialCommands.SplitStacks),
-                new CommandBindKey(KeyCode.V, (ContextMenuCommand)SpecialCommands.SplitStacksConfirm),
-                new CommandBindKey(KeyCode.Alpha3, (ContextMenuCommand)SpecialCommands.LockItemsModToggle)
+                new CommandBindKey(KeyCode.Alpha1, ContextMenuCommand.FixWound),
+                new CommandBindKey(KeyCode.Alpha2, ContextMenuCommand.Repair),
+                new CommandBindKey(KeyCode.Alpha5, ContextMenuCommand.UnlockDatadisk),
+
+                new CommandBindKey(KeyCode.A, ContextMenuCommand.Augment),
+                new CommandBindKey(KeyCode.A, ContextMenuCommand.RemoveAugmentation),
+                new CommandBindKey(KeyCode.A, ContextMenuCommand.Implant),
+                new CommandBindKey(KeyCode.A, ContextMenuCommand.RemoveImplants),
+
+                //Add the game's commands that are ints instead of in the Enum for some reason.
+                new CommandBindKey(KeyCode.V, (ContextMenuCommand)99_999,"Split Stacks"),
+                new CommandBindKey(KeyCode.V, (ContextMenuCommand)100_000, "Split Stacks Confirm"),
+
+                //Mods
+                new CommandBindKey(KeyCode.Alpha3, (ContextMenuCommand)610_000, "Lock Items Mod Toggle - https://steamcommunity.com/sharedfiles/filedetails/?id=3444150354"),
+                new CommandBindKey(KeyCode.F, (ContextMenuCommand)620_000, "Storage and Backpack Sort, Drop, and Drop One - Drop One Command https://steamcommunity.com/sharedfiles/filedetails/?id=3461186439"),
             };
 
             //Add any binds that are not set.  This is to assist users setting up the commands without having to 
@@ -70,7 +81,7 @@ namespace QM_ContextMenuHotkeys
         /// </summary>
         /// <param name="existing"></param>
         /// <returns></returns>
-        public void AddMissingCommands()
+        public void AddMissingCommands()    
         {
 
             HashSet<ContextMenuCommand> existingCommands = new HashSet<ContextMenuCommand>(CommandBinds.Select(x => x.Command));

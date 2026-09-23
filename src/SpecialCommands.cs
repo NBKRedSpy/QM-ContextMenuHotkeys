@@ -13,17 +13,22 @@ namespace QM_ContextMenuHotkeys
     /// </summary>
     public enum SpecialCommands
     {
-        RemoveAugmentation = 22,
-        SplitStacks = 99_999,
+        //RemoveAugmentation = 22,
+
+        //SplitStacks = 99_999,
         /// <summary>
         /// This doesn't currently work as the confirm is special.
         /// </summary>
-        SplitStacksConfirm = 100_000,
+        //SplitStacksConfirm = 100_000,
 
         /// <summary>
         /// The Lock and Unlock toggle from the Filter pickup items mod
         /// https://steamcommunity.com/sharedfiles/filedetails/?id=3444150354
         /// </summary>
-        LockItemsModToggle = 610_000
+        //LockItemsModToggle = 610_000,
+
+        DropOneCommand = 620_000,
+
+
     }
 }

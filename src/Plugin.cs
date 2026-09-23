@@ -114,10 +114,6 @@ namespace QM_ContextMenuHotkeys
             {
                 string jsonText = File.ReadAllText(ConfigPath);
 
-                //Handle the commands that were changed from enum values to magic numbers;
-                jsonText.Replace("\"SplitStacks\"", SpecialCommands.SplitStacks.ToString());
-                jsonText.Replace("\"SplitStacksConfirm\"", SpecialCommands.SplitStacksConfirm.ToString());
-
                 Config = JsonConvert.DeserializeObject<ModConfig>(jsonText, JsonSettings);
 
                 if(ConvertToLatest(Config))

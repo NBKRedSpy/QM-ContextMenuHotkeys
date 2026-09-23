@@ -21,6 +21,11 @@ namespace QM_ContextMenuHotkeys
         [JsonConverter(typeof(StringEnumConverter))]
         public KeyCode  Key { get; set; }
 
+        /// <summary>
+        /// An optional description of the key.  Useful for commands that use a number or are mod based.
+        /// </summary>
+        public string Description { get; set; }
+
         [JsonConverter(typeof(StringEnumConverter))]
         public ContextMenuCommand Command  { get; set; }
 
@@ -29,10 +34,11 @@ namespace QM_ContextMenuHotkeys
             
         }
 
-        public CommandBindKey(KeyCode key, ContextMenuCommand command)
+        public CommandBindKey(KeyCode key, ContextMenuCommand command, string description = "")
         {
             Key = key;
             Command = command;
+            Description = description;
         }
     }
 }
