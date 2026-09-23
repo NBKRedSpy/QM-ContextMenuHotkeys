@@ -66,8 +66,16 @@ namespace QM_ContextMenuHotkeys
                 new CommandBindKey(KeyCode.V, (ContextMenuCommand)100_000, "Split Stacks Confirm"),
 
                 //Mods
-                new CommandBindKey(KeyCode.Alpha3, (ContextMenuCommand)610_000, "Lock Items Mod Toggle - https://steamcommunity.com/sharedfiles/filedetails/?id=3444150354"),
-                new CommandBindKey(KeyCode.F, (ContextMenuCommand)620_000, "Storage and Backpack Sort, Drop, and Drop One - Drop One Command https://steamcommunity.com/sharedfiles/filedetails/?id=3461186439"),
+                new CommandBindKey(KeyCode.Alpha3, (ContextMenuCommand)610_000, 
+                    "Lock Items Mod Toggle - https://steamcommunity.com/sharedfiles/filedetails/?id=3444150354"),
+                new CommandBindKey(KeyCode.F, (ContextMenuCommand)620_000, 
+                    "Storage and Backpack Sort, Drop, and Drop One - Drop One Command https://steamcommunity.com/sharedfiles/filedetails/?id=3461186439"),
+                new CommandBindKey(KeyCode.Alpha0, (ContextMenuCommand)101, 
+                    "MonkeFavorites Add Favorite - https://steamcommunity.com/sharedfiles/filedetails/?id=3404205113"),
+                new CommandBindKey(KeyCode.Alpha0, (ContextMenuCommand)101, 
+                    "MonkeFavorites Add Favorite - https://steamcommunity.com/sharedfiles/filedetails/?id=3404205113"),
+                new CommandBindKey(KeyCode.Alpha0, (ContextMenuCommand)102,
+                    "MonkeFavorites Remove Favorite - https://steamcommunity.com/sharedfiles/filedetails/?id=3404205113"),
             };
 
             //Add any binds that are not set.  This is to assist users setting up the commands without having to 
