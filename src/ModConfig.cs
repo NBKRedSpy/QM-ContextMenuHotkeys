@@ -56,7 +56,6 @@ namespace QM_ContextMenuHotkeys
                 new CommandBindKey(KeyCode.Alpha1, ContextMenuCommand.FixWound),
                 new CommandBindKey(KeyCode.Alpha2, ContextMenuCommand.Repair),
                 new CommandBindKey(KeyCode.Alpha5, ContextMenuCommand.UnlockDatadisk),
-
                 new CommandBindKey(KeyCode.A, ContextMenuCommand.Augment),
                 new CommandBindKey(KeyCode.A, ContextMenuCommand.RemoveAugmentation),
                 new CommandBindKey(KeyCode.A, ContextMenuCommand.Implant),
