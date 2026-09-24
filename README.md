@@ -35,32 +35,36 @@ The list of valid keyboard keys can be found  at the bottom of https://docs.unit
 The game currently supports the following commands for the Context Menu.
 
 ```
-Drop
-Take
-Equip
-Unequip
-Use
-Reload
-UnloadAmmo
-Eat
-FixWound
-Amputate
-Disassemble
-DisassembleAll
-DisassembleX1
-Repair
-UnlockDatadisk
-SpillOnTheFloorX1
-SpillOnTheFloorX5
-99999
-ApplySkull
-RemoveSkull
-RemoveFire
-Take_To_Drag
-Augment
-RemoveAugmentation
-Install
+    Drop,
+    Take,
+    Equip,
+    Unequip,
+    Use,
+    Reload,
+    UnloadAmmo,
+    Eat,
+    FixWound,
+    Amputate,
+    Disassemble,
+    DisassembleAll,
+    DisassembleX1,
+    Repair,
+    UnlockDatadisk,
+    SpillOnTheFloorX1,
+    SpillOnTheFloorX5,
+    ApplySkull,
+    RemoveSkull,
+    RemoveFire,
+    Take_To_Drag,
+    Augment,
+    RemoveAugmentation,
+    Implant,
+    RemoveImplants,
+    99999,
+    100000
 ```
+
+Note: Commands 99,999 and 100,000 are "split stacks" and "split stacks confirm"
 
 # Support
 If you enjoy my mods and want to buy me a coffee, check out my [Ko-Fi](https://ko-fi.com/nbkredspy71915) page.
@@ -70,38 +74,4 @@ Thanks!
 Source code is available on GitHub https://github.com/NBKRedSpy/QM-ContextMenuHotkeys
 
 # Change Log
-## 3.5.2
-* Added the "Split Stacks Confirm" to the docs and the default config.
-    * Thank you to Steam user Skrypt for reporting this.
-
-## 3.5.0
-* v0.8.6 compatibility
-* Removed positional mode.
-* Configs will automatically be changed to write any missing settings from older files.
-
-## 3.3.0
-* v0.8.5 compatible.
-
-## 3.3.0
-* Moved config file directory.
-
-## 3.2.0
-* .8 compatible.
-
-## 3.1.0
-* Simplified enabling modes with a single setting.
-* Supports upgrading the configuration schema.
-* Added every context menu command in the config with unbound items set to KeyCode.None.
-* Highlights the hotkey on the menu items.
-
-## 3.0.0
-* Supports Command Binding.
-
-## 2.0.0
-
-* Added list for commands that must have a modifier.  Defaults to destructive items.
-
-* Improved the command parsing.  Now avoids invisible cached commands.
-
-
-
+https://github.com/NBKRedSpy/QM-ContextMenuHotkeys/blob/master/CHANGELOG.md

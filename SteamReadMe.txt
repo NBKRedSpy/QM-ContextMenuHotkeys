@@ -57,32 +57,36 @@ The list of valid keyboard keys can be found  at the bottom of https://docs.unit
 
 The game currently supports the following commands for the Context Menu.
 [code]
-Drop
-Take
-Equip
-Unequip
-Use
-Reload
-UnloadAmmo
-Eat
-FixWound
-Amputate
-Disassemble
-DisassembleAll
-DisassembleX1
-Repair
-UnlockDatadisk
-SpillOnTheFloorX1
-SpillOnTheFloorX5
-99999
-ApplySkull
-RemoveSkull
-RemoveFire
-Take_To_Drag
-Augment
-RemoveAugmentation
-Install
+    Drop,
+    Take,
+    Equip,
+    Unequip,
+    Use,
+    Reload,
+    UnloadAmmo,
+    Eat,
+    FixWound,
+    Amputate,
+    Disassemble,
+    DisassembleAll,
+    DisassembleX1,
+    Repair,
+    UnlockDatadisk,
+    SpillOnTheFloorX1,
+    SpillOnTheFloorX5,
+    ApplySkull,
+    RemoveSkull,
+    RemoveFire,
+    Take_To_Drag,
+    Augment,
+    RemoveAugmentation,
+    Implant,
+    RemoveImplants,
+    99999,
+    100000
 [/code]
+
+Note: Commands 99,999 and 100,000 are "split stacks" and "split stacks confirm"
 
 [h1]Support[/h1]
 
@@ -95,53 +99,4 @@ Source code is available on GitHub https://github.com/NBKRedSpy/QM-ContextMenuHo
 
 [h1]Change Log[/h1]
 
-[h2]3.5.2[/h2]
-[list]
-[*]Added the "Split Stacks Confirm" to the docs and the default config.
-[list]
-[*]Thank you to Steam user Skrypt for reporting this.
-[/list]
-[/list]
-
-[h2]3.5.0[/h2]
-[list]
-[*]v0.8.6 compatibility
-[*]Removed positional mode.
-[*]Configs will automatically be changed to write any missing settings from older files.
-[/list]
-
-[h2]3.3.0[/h2]
-[list]
-[*]v0.8.5 compatible.
-[/list]
-
-[h2]3.3.0[/h2]
-[list]
-[*]Moved config file directory.
-[/list]
-
-[h2]3.2.0[/h2]
-[list]
-[*].8 compatible.
-[/list]
-
-[h2]3.1.0[/h2]
-[list]
-[*]Simplified enabling modes with a single setting.
-[*]Supports upgrading the configuration schema.
-[*]Added every context menu command in the config with unbound items set to KeyCode.None.
-[*]Highlights the hotkey on the menu items.
-[/list]
-
-[h2]3.0.0[/h2]
-[list]
-[*]Supports Command Binding.
-[/list]
-
-[h2]2.0.0[/h2]
-[list]
-[*]
-Added list for commands that must have a modifier.  Defaults to destructive items.
-[*]
-Improved the command parsing.  Now avoids invisible cached commands.
-[/list]
+https://github.com/NBKRedSpy/QM-ContextMenuHotkeys/blob/master/CHANGELOG.md
