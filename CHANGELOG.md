@@ -1,3 +1,6 @@
+## 3.5.4
+* Removed some old conversion code that could be causing issues in some cases.
+
 ## 3.5.3
 * Added in hotkeys for missed menu commands in 1.0
 * Added in hotkeys for popular mods.

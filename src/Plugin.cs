@@ -116,15 +116,15 @@ namespace QM_ContextMenuHotkeys
 
                 Config = JsonConvert.DeserializeObject<ModConfig>(jsonText, JsonSettings);
 
-                if(ConvertToLatest(Config))
-                {
-                    //Write the file to have the latest options.
-                    Debug.Log($"Upgrading config to version {Config.ConfigVersion}");   
-                    File.WriteAllText(ConfigPath, JsonConvert.SerializeObject(Config, JsonSettings));
-                }
+                //if(ConvertToLatest(Config))
+                //{
+                //    //Write the file to have the latest options.
+                //    Debug.Log($"Upgrading config to version {Config.ConfigVersion}");   
+                //    File.WriteAllText(ConfigPath, JsonConvert.SerializeObject(Config, JsonSettings));
+                //}
 
                 //Re-write the config with any missing defaults and remove any old settings.
-                Config.RewriteConfigFileIfDifferent(ConfigPath, jsonText);
+                //Config.RewriteConfigFileIfDifferent(ConfigPath, jsonText);
             }
             catch (Exception ex)
             {
@@ -135,42 +135,42 @@ namespace QM_ContextMenuHotkeys
         }
 
 
-        /// <summary>
-        /// If the config is an older version, convert to the latest.
-        /// </summary>
-        /// <param name="current"></param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
-        private static bool ConvertToLatest(ModConfig current)
-        {
+        ///// <summary>
+        ///// If the config is an older version, convert to the latest.
+        ///// </summary>
+        ///// <param name="current"></param>
+        ///// <returns></returns>
+        ///// <exception cref="NotImplementedException"></exception>
+        //private static bool ConvertToLatest(ModConfig current)
+        //{
 
-            if (current.ConfigVersion == ModConfig.LatestConfigVersion) return false;
+        //    if (current.ConfigVersion == ModConfig.LatestConfigVersion) return false;
 
 
-            List<CommandBindKey> defaults = new ModConfig().CommandBinds;
-            List<CommandBindKey> existing = current.CommandBinds;
+        //    List<CommandBindKey> defaults = new ModConfig().CommandBinds;
+        //    List<CommandBindKey> existing = current.CommandBinds;
 
-            //Remove already bound commands.
-            List<CommandBindKey> newItems = defaults
-                .Where(x => !existing.Any(c => c.Command == x.Command)).ToList();
+        //    //Remove already bound commands.
+        //    List<CommandBindKey> newItems = defaults
+        //        .Where(x => !existing.Any(c => c.Command == x.Command)).ToList();
 
-            //Any new command that conflicts with a currently bound key, 
-            //  change to not be bound.
-            newItems.Where(x => existing.Any(c => c.Key == x.Key))
-                .ToList().ForEach(x => x.Key = KeyCode.None);
+        //    //Any new command that conflicts with a currently bound key, 
+        //    //  change to not be bound.
+        //    newItems.Where(x => existing.Any(c => c.Key == x.Key))
+        //        .ToList().ForEach(x => x.Key = KeyCode.None);
 
-            existing.AddRange(newItems);
+        //    existing.AddRange(newItems);
 
-            current.CommandBinds = existing
-                .OrderBy(x => x.Key == KeyCode.None)
-                .ThenBy(x => x.Key.ToString())
-                .ThenBy(x => x.Command.ToString())
-                .ToList();
+        //    current.CommandBinds = existing
+        //        .OrderBy(x => x.Key == KeyCode.None)
+        //        .ThenBy(x => x.Key.ToString())
+        //        .ThenBy(x => x.Command.ToString())
+        //        .ToList();
 
-            current.ConfigVersion = ModConfig.LatestConfigVersion;
+        //    current.ConfigVersion = ModConfig.LatestConfigVersion;
 
-            return true;
-        }
+        //    return true;
+        //}
 
         private static void CreateDefaultConfig(string configPath, JsonSerializerSettings settings)
         {
