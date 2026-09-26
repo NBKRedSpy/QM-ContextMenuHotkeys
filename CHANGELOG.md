@@ -1,3 +1,6 @@
+## 3.5.5
+* Fix: Previous update caused new installs to crash when creating the default config.
+
 ## 3.5.4
 * Removed some old conversion code that could be causing issues in some cases.
 

@@ -1,15 +1,9 @@
 ﻿using MGSC;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace QM_ContextMenuHotkeys
@@ -36,6 +30,10 @@ namespace QM_ContextMenuHotkeys
         /// The configuration version.  Used to assist with conversion
         /// </summary>
         public string ConfigVersion;
+
+        /// <summary>
+        /// The Key to command binding. Ex:  E to Equip, D to Drop, etc.
+        /// </summary>
         public List<CommandBindKey> CommandBinds { get; set; }
 
         public ModConfig()
@@ -74,27 +72,61 @@ namespace QM_ContextMenuHotkeys
                     "MonkeFavorites Add Favorite - https://steamcommunity.com/sharedfiles/filedetails/?id=3404205113"),
                 new CommandBindKey(KeyCode.Alpha4, (ContextMenuCommand)102,
                     "MonkeFavorites Remove Favorite - https://steamcommunity.com/sharedfiles/filedetails/?id=3404205113"),
-            };
 
-            //Add any binds that are not set.  This is to assist users setting up the commands without having to 
-            //  search through them.
-            AddMissingCommands();
-            RewriteConfigFileIfDifferent(Plugin.ConfigPath);
+            };
+        }
+
+
+        public static ModConfig LoadConfig(string configPath)
+        {
+            ModConfig config;
+
+            try
+            {
+                if (!File.Exists(configPath))
+                {
+                    config = new ModConfig();
+                    string jsonText = JsonConvert.SerializeObject(config, Plugin.JsonSettings);
+                    File.WriteAllText(configPath, jsonText);
+                }
+                else
+                {
+                    string jsonText = File.ReadAllText(configPath);
+                    config = JsonConvert.DeserializeObject<ModConfig>(jsonText, Plugin.JsonSettings);
+                    //Add any commands which may have been added to the enum since the config file was created.
+                    config.AddMissingCommands();
+
+                    //Re-write the config file if it is different than what was loaded from disk.
+                    config.RewriteConfigFileIfDifferent(configPath, jsonText);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"Unable to process config {configPath}.  Loading defaults");
+                Debug.LogError(ex.ToString());
+
+                config = new ModConfig();
+            }
+
+            config.InitKeyStrings();
+            return config;  
         }
 
         /// <summary>
         /// Adds any binding commands that do not already have an entry in the binding list.
         /// </summary>
-        /// <param name="existing"></param>
         /// <returns></returns>
         public void AddMissingCommands()    
         {
+            //Get the defaults in case custom items are added, as well as the defaults for new keys.
+            ModConfig defaultConfig = new ModConfig();
 
-            HashSet<ContextMenuCommand> existingCommands = new HashSet<ContextMenuCommand>(CommandBinds.Select(x => x.Command));
+            CommandBinds.AddRange(defaultConfig.CommandBinds.Where(x => !CommandBinds.Any(y => y.Command == x.Command)));
 
+            //Add any commands that were added to the game's enum since the config file was created.
             List<CommandBindKey> newCommands =
                 Enum.GetValues(typeof(ContextMenuCommand)).Cast<ContextMenuCommand>()
-                .Where(x => !existingCommands.Contains(x))
+                .Where(x => !CommandBinds.Any(y => y.Command == x))     
                 .Select(x => new CommandBindKey(KeyCode.None, x))
                 .ToList();
 
@@ -173,22 +205,6 @@ namespace QM_ContextMenuHotkeys
 
             File.WriteAllText(configPath, newJson);
         }
-
-
-        /// <summary>
-        /// Used to re-write the config file to remove any settings that are no longer used
-        /// and new defaults.
-        /// Reads the text from the existing file.
-        /// </summary>
-        /// <param name="configPath">The path to the config file</param>
-        public void RewriteConfigFileIfDifferent(string configPath)
-        {
-            string jsonText = File.ReadAllText(configPath);
-
-            RewriteConfigFileIfDifferent(configPath, jsonText);
-
-        }
-
 
     }
 }
